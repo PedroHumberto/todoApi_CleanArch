@@ -1,9 +1,10 @@
 using System;
+using Flunt.Notifications;
 
 namespace Todo.Domain.Commands.Contracts
 {
     public interface ICommand
     {
-        bool Validate();
+        void Validate();
     }
 }
