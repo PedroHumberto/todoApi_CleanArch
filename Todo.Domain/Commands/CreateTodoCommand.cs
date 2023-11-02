@@ -15,16 +15,16 @@ namespace Todo.Domain.Commands
             Title = title;
             User = user;
             Date = date;
+            AddNotifications(new CreateTodoContract(this));
         }
 
         public string Title { get; set; }
         public string User { get; set; }
         public DateTime Date { get; set; }
 
-
         public void Validate()
         {
-            AddNotifications(new CreateTodoContract(this));
+            throw new NotImplementedException();
         }
     }
 }
