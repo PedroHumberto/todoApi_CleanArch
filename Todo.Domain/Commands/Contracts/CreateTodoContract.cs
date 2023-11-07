@@ -12,8 +12,8 @@ namespace Todo.Domain.Commands.Contracts
         public CreateTodoContract(CreateTodoCommand todoCommand)
         {
             Requires()
-                .IsLowerThan(todoCommand.Title, 3, "Title", "A tarefa deve conter mais de 3 caracteres")
-                .IsLowerThan(todoCommand.User, 6, "User", "Invalid User");
+                .IsGreaterOrEqualsThan(todoCommand.Title, 3, "Title", "A tarefa deve conter mais de 3 caracteres")
+                .IsGreaterOrEqualsThan(todoCommand.User, 6, "User", "Invalid User");
         }
     }
 }
