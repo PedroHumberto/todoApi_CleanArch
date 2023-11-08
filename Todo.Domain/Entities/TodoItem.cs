@@ -27,6 +27,11 @@ namespace Todo.Domain.Entities
             FinishedAt = DateTime.UtcNow;
             Done = true;
         }
+        public void MarkAsUndone()
+        {
+            FinishedAt = null;
+            Done = false;
+        }
 
         public void UpdateTitle(string title)
         {
