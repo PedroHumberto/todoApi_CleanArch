@@ -15,5 +15,15 @@ namespace Todo.Domain.Infra.Context
         }
 
         public DbSet<TodoItem> Todos {get; set;}
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TodoItem>().Property(x => x.Id);
+            modelBuilder.Entity<TodoItem>().Property(x => x.User);
+            modelBuilder.Entity<TodoItem>().Property(x => x.Title).HasMaxLength(160);
+            modelBuilder.Entity<TodoItem>().Property(x => x.Done);
+            modelBuilder.Entity<TodoItem>().Property(x => x.Date);
+            modelBuilder.Entity<TodoItem>().HasIndex( b => b.User);
+        }
     }
 }
