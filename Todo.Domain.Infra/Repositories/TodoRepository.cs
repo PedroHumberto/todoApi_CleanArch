@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Caching.Memory;
 using Todo.Domain.Entities;
 using Todo.Domain.Infra.Context;
 using Todo.Domain.Queries;
@@ -9,10 +11,13 @@ namespace Todo.Domain.Infra.Repositories
     public class TodoRepository : ITodoRepository
     {
         private readonly TodoContext _context;
+        private readonly IMemoryCache _memoryCache;
 
-        public TodoRepository(TodoContext context)
+
+        public TodoRepository(TodoContext context, IMemoryCache memoryCache)
         {
             _context = context;
+            _memoryCache = memoryCache;
         }
 
         public void Create(TodoItem todo)
@@ -20,10 +25,17 @@ namespace Todo.Domain.Infra.Repositories
             _context.Todos.Add(todo);
             _context.SaveChanges();
         }
-
         public IEnumerable<TodoItem> GetAll(string user)
         {
-            return _context.Todos.AsNoTracking().Where(TodoQueries.GetAll(user)).OrderBy(x => x.Date);
+
+            var key = $"user-{user}";
+
+            return _memoryCache.GetOrCreate(key, entry=> {
+                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
+                var todoList = _context.Todos.AsNoTracking().Where(TodoQueries.GetAll(user)).OrderBy(x => x.Date);
+
+                return todoList;
+            });
         }
 
         public IEnumerable<TodoItem> GetAllDone(string user)
